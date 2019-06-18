@@ -9,7 +9,7 @@ jobs:
         before_script:
           - npm install -g bats
           - sudo apt-get install -y jq
-          - sudo apt-get install -y yq
+          - pip install yq
         script:
           - echo $PWD
           - export PATH=$PWD/cli:$PATH 
