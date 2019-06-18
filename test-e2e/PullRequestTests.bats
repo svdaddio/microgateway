@@ -33,6 +33,9 @@ EDGEMICRO=$(which edgemicro || echo edgemicro)
 TIMESTAMP=`date "+%Y-%m-%d-%H"`
 LOGFILE="PullRequestTestLog.$TIMESTAMP"
 
+echo "Username $MOCHA_USER"
+echo "Org $MOCHA_ORG"
+
 setupOnce() {
   rm -f edgemicro.sock
   rm -f edgemicro.configure.txt
