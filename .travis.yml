@@ -10,8 +10,11 @@ jobs:
           - npm install -g bats
           - npm install -g yq
         script:
+          - echo $PWD
           - export PATH=$PWD/cli:$PATH 
+          - echo $PATH
           - cd test-e2e 
+          - env
           - bats NightlyTests.bats
 
 notifications:
