@@ -7,21 +7,21 @@
 load testhelper
 
 # Username and Password for the api.enterprise.apigee.com
-#USERNAME=
-#PASSWORD=
+#MOCHA_USER=
+#MOCHA_PASSWORD=
 
 # OrgName configured at api.enterprise.apigee.com
-#ORG_NAME=
+#MOCHA_ORG=
 
 # Proxy environment configured at api.enterprise.apigee.com
 # Default is 'test' environment
-#PROXY_ENV=
+#MOCHA_ENV=test
 
 proxyNamePrefix="edgemicro_"
 proxyTargetUrl="http://mocktarget.apigee.net/json"
 
 EMG_CONFIG_DIR="$HOME/.edgemicro"
-EMG_CONFIG_FILE="$HOME/.edgemicro/$ORG_NAME-$PROXY_ENV-config.yaml"
+EMG_CONFIG_FILE="$HOME/.edgemicro/$MOCHA_ORG-$MOCHA_ENV-config.yaml"
 
 PRODUCT_NAME="edgemicro_product_pr"
 PROXY_NAME="edgemicro_proxy_pr"
@@ -95,7 +95,7 @@ setupOnce() {
 
   logInfo "Configure EMG"
 
-  $EDGEMICRO configure -o $ORG_NAME -e $PROXY_ENV -u $USERNAME -p $PASSWORD > edgemicro.configure.txt
+  $EDGEMICRO configure -o $MOCHA_ORG -e $MOCHA_ENV -u $MOCHA_USER -p $MOCHA_PASSWORD > edgemicro.configure.txt
   status=$?
 
   logInfo "Configure EMG with status $status"
@@ -109,7 +109,7 @@ setupOnce() {
 
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
-  $EDGEMICRO verify -o $ORG_NAME -e $PROXY_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
+  $EDGEMICRO verify -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
   message=$(cat verifyEMG.txt | grep "verification complete")
   status=$?
   rm -f verifyEMG.txt
@@ -125,7 +125,7 @@ setupOnce() {
 
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
-  $EDGEMICRO start -o $ORG_NAME -e $PROXY_ENV -k $EMG_KEY -s $EMG_SECRET -p 1 > edgemicro.logs 2>&1 &
+  $EDGEMICRO start -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET -p 1 > edgemicro.logs 2>&1 &
   sleep 5
   message=$(cat edgemicro.logs | grep "PROCESS PID")
   status=$?
@@ -146,7 +146,7 @@ setupOnce() {
 
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
-  $EDGEMICRO reload -o $ORG_NAME -e $PROXY_ENV -k $EMG_KEY -s $EMG_SECRET 
+  $EDGEMICRO reload -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET 
   status=$?
   sleep 10
 
@@ -159,10 +159,10 @@ setupOnce() {
 
   logInfo "SetProductName Filter"
 
-  yq w -i ${EMG_CONFIG_FILE} edge_config.products "https://${ORG_NAME}-${PROXY_ENV}.apigee.net/edgemicro-auth/products?productnamefilter=.*$PRODUCT_NAME.*"
+  yq w -i ${EMG_CONFIG_FILE} edge_config.products "https://${MOCHA_ORG}-${MOCHA_ENV}.apigee.net/edgemicro-auth/products?productnamefilter=.*$PRODUCT_NAME.*"
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
-  $EDGEMICRO reload -o $ORG_NAME -e $PROXY_ENV -k $EMG_KEY -s $EMG_SECRET 
+  $EDGEMICRO reload -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET 
   status=$?
   sleep 15
 
@@ -262,10 +262,10 @@ setupOnce() {
 
   logInfo "Set Invalid Product Name Filter"
 
-  yq w -i ${EMG_CONFIG_FILE} edge_config.products "https://${ORG_NAME}-${PROXY_ENV}.apigee.net/edgemicro-auth/products?productnamefilter=*$PRODUCT_NAME*"
+  yq w -i ${EMG_CONFIG_FILE} edge_config.products "https://${MOCHA_ORG}-${MOCHA_ENV}.apigee.net/edgemicro-auth/products?productnamefilter=*$PRODUCT_NAME*"
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
-  $EDGEMICRO reload -o $ORG_NAME -e $PROXY_ENV -k $EMG_KEY -s $EMG_SECRET 
+  $EDGEMICRO reload -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET 
   status=$?
   sleep 15
 
@@ -292,10 +292,10 @@ setupOnce() {
 
   logInfo "Reset Invalid Product Name Filter"
 
-  yq w -i ${EMG_CONFIG_FILE} edge_config.products "https://${ORG_NAME}-${PROXY_ENV}.apigee.net/edgemicro-auth/products"
+  yq w -i ${EMG_CONFIG_FILE} edge_config.products "https://${MOCHA_ORG}-${MOCHA_ENV}.apigee.net/edgemicro-auth/products"
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
-  $EDGEMICRO reload -o $ORG_NAME -e $PROXY_ENV -k $EMG_KEY -s $EMG_SECRET 
+  $EDGEMICRO reload -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET 
   status=$?
   sleep 15
 

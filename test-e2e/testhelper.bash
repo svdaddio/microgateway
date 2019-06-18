@@ -28,8 +28,8 @@ listDevelopers() {
 
     local result=0
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers" 
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listDevelopers.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers" 
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listDevelopers.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve developer lists with code $result"
@@ -47,10 +47,10 @@ createDeveloper() {
     local result=0
     apiDeveloper="$1"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers" 
 
     cat templates/apideveloper-template.json | jq --arg developer ${apiDeveloper} '(.email) = $developer + "@google.com" | (.firstName, .userName) = $developer | (.lastName) = "dev"' > "${apiDeveloper}".json
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X POST -d @"${apiDeveloper}".json -D headers.txt -o createDeveloper.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X POST -d @"${apiDeveloper}".json -D headers.txt -o createDeveloper.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to create developer with code $result"
@@ -68,8 +68,8 @@ listDeveloper() {
     local result=0
     apiDeveloper="$1"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listDeveloper.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listDeveloper.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve developer list with code $result"
@@ -87,8 +87,8 @@ deleteDeveloper() {
     local result=0
     apiDeveloper="$1"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" -X DELETE ${apiProxyURL} -D headers.txt -o deleteDeveloper.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" -X DELETE ${apiProxyURL} -D headers.txt -o deleteDeveloper.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to delete developer with code $result"
@@ -112,8 +112,8 @@ listDeveloperApps() {
     local result=0
     apiDeveloper="$1"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com/apps"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listDeveloperApps.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com/apps"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listDeveloperApps.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve developer apps list with code $result"
@@ -131,12 +131,12 @@ createDeveloperApp() {
     apiDeveloper="$1"
     apiDeveloperApp="$2"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com/apps" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com/apps" 
 
     cat ${apiDeveloperApp}.json | jq --arg developerName ${apiDeveloperApp} '(.name,.attributes[0].value) = $developerName' > "${apiDeveloperApp}".json.tmp
     mv "${apiDeveloperApp}".json.tmp "${apiDeveloperApp}".json
 
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X POST -d @${apiDeveloperApp}.json -D headers.txt -o createDeveloperApp.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X POST -d @${apiDeveloperApp}.json -D headers.txt -o createDeveloperApp.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to create developer app with code $result"
@@ -155,8 +155,8 @@ listDeveloperApp() {
     apiDeveloper="$1"
     apiDeveloperApp="$2"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com/apps/${apiDeveloperApp}"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listDeveloperApp.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com/apps/${apiDeveloperApp}"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listDeveloperApp.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve developer app with code $result"
@@ -175,8 +175,8 @@ getDeveloperApiKey() {
     apiDeveloper="$1"
     apiDeveloperApp="$2"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com/apps/${apiDeveloperApp}"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o getDeveloperApiKey.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com/apps/${apiDeveloperApp}"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o getDeveloperApiKey.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve developer api key with code $result"
@@ -198,8 +198,8 @@ deleteDeveloperApp() {
     apiDeveloper="$1"
     apiDeveloperApp="$2"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/developers/${apiDeveloper}@google.com/apps/${apiDeveloperApp}"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" -X DELETE ${apiProxyURL} -D headers.txt -o deleteDeveloperApp.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/developers/${apiDeveloper}@google.com/apps/${apiDeveloperApp}"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" -X DELETE ${apiProxyURL} -D headers.txt -o deleteDeveloperApp.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to delete developer app with code $result"
@@ -223,8 +223,8 @@ listAPIProxy() {
     local result=0
     apiProxyName="$1"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/apis/${apiProxyName}"
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/apis/${apiProxyName}"
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve API Proxy list with code $result"
@@ -241,9 +241,9 @@ listAPIProxy() {
 listAPIProxies() {
 
     local result=0
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/apis" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/apis" 
 
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listAPIProxies.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listAPIProxies.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve API Proxies list with code $result"
@@ -259,11 +259,11 @@ createAPIProxy() {
 
     local result=0
     apiProxyName="$1"
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/apis" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/apis" 
 
     cat templates/apiproxy-template.json | jq --arg apiProxyName ${apiProxyName} '(.name) = $apiProxyName' > "${apiProxyName}".json
 
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X POST -d @"${apiProxyName}".json -D headers.txt -o createAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X POST -d @"${apiProxyName}".json -D headers.txt -o createAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to create API Proxy with code $result"
@@ -282,9 +282,9 @@ listAPIProxy() {
 
     local result=0
     apiProxyName="$1"
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/apis/${apiProxyName}"
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/apis/${apiProxyName}"
 
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -D headers.txt -o listAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -D headers.txt -o listAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve API Proxy list with code $result"
@@ -304,9 +304,9 @@ updateAPIProxy() {
     apiProxyBundle="$2"
     apiProxyBundleRevision="$3"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/apis/${apiProxyName}/revisions/${apiProxyBundleRevision}" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/apis/${apiProxyName}/revisions/${apiProxyBundleRevision}" 
 
-    ${CURL} -H "Content-Type: multipart/form-data" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X POST -F "file=@${apiProxyBundle}" -D headers.txt -o updateAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type: multipart/form-data" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X POST -F "file=@${apiProxyBundle}" -D headers.txt -o updateAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | grep -v 100 | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to update API Proxy with code $result"
@@ -326,9 +326,9 @@ deployAPIProxy() {
     envName="$2"
     apiProxyBundleRevision="$3"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/environments/${envName}/apis/${apiProxyName}/revisions/${apiProxyBundleRevision}/deployments" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/environments/${envName}/apis/${apiProxyName}/revisions/${apiProxyBundleRevision}/deployments" 
 
-    ${CURL} -H "Content-Type: application/x-www-form-urlencoded" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X POST -D headers.txt -o deployAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type: application/x-www-form-urlencoded" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X POST -D headers.txt -o deployAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to deploy API Proxy with code $result"
@@ -347,9 +347,9 @@ undeployAPIProxy() {
     envName="$2"
     apiProxyBundleRevision="$3"
 
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/environments/${envName}/apis/${apiProxyName}/revisions/${apiProxyBundleRevision}/deployments" 
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/environments/${envName}/apis/${apiProxyName}/revisions/${apiProxyBundleRevision}/deployments" 
 
-    ${CURL} -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X DELETE -D headers.txt -o undeployAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X DELETE -D headers.txt -o undeployAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to undeploy API Proxy with code $result"
@@ -366,9 +366,9 @@ deleteAPIProxy() {
 
     local result=0
     apiProxyName="$1"
-    apiProxyURL="${API_PROXY_URL}/${ORG_NAME}/apis/${apiProxyName}"
+    apiProxyURL="${API_PROXY_URL}/${MOCHA_ORG}/apis/${apiProxyName}"
 
-    ${CURL} -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${apiProxyURL} -X DELETE -D headers.txt -o deleteAPIProxy.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X DELETE -D headers.txt -o deleteAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to delete API Proxy with code $result"
@@ -413,8 +413,8 @@ createAPIProxyBundle() {
 listAPIProducts() {
 
     local result=0
-    productURL="${API_PRODUCT_URL}/${ORG_NAME}/apiproducts"
-    ${CURL} -q -s -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${productURL} -D headers.txt -o listAPIProducts.txt > /dev/null 2>&1 ; ret=$?
+    productURL="${API_PRODUCT_URL}/${MOCHA_ORG}/apiproducts"
+    ${CURL} -q -s -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${productURL} -D headers.txt -o listAPIProducts.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve API Products list with code $result"
@@ -432,12 +432,12 @@ createAPIProduct() {
     local result=0
     apiProductName="$1"
 
-    productURL="${API_PRODUCT_URL}/${ORG_NAME}/apiproducts"
+    productURL="${API_PRODUCT_URL}/${MOCHA_ORG}/apiproducts"
 
     cat ${apiProductName}.json | jq --arg productName ${apiProductName} '(.name, .displayName) = $productName| (.description) += $productName' > "${apiProductName}".json.tmp
     mv "${apiProductName}".json.tmp "${apiProductName}".json
 
-    ${CURL} -q -s -H "Content-Type:application/json" -X POST -d @"${apiProductName}".json -u "$USERNAME":"$PASSWORD" ${productURL} -D headers.txt -o createAPIProduct.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -q -s -H "Content-Type:application/json" -X POST -d @"${apiProductName}".json -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${productURL} -D headers.txt -o createAPIProduct.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to create API Product with code $result"
@@ -455,8 +455,8 @@ listAPIProduct() {
     local result=0
     apiProductName="$1"
 
-    productURL="${API_PRODUCT_URL}/${ORG_NAME}/apiproducts/${apiProductName}"
-    ${CURL} -q -s -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${productURL} -D headers.txt -o listAPIProduct.txt > /dev/null 2>&1 ; ret=$?
+    productURL="${API_PRODUCT_URL}/${MOCHA_ORG}/apiproducts/${apiProductName}"
+    ${CURL} -q -s -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${productURL} -D headers.txt -o listAPIProduct.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to retrieve API Product list with code $result"
@@ -472,9 +472,9 @@ deleteAPIProduct() {
 
     local result=0
     apiProductName="$1"
-    productURL="${API_PRODUCT_URL}/${ORG_NAME}/apiproducts/${apiProductName}"
+    productURL="${API_PRODUCT_URL}/${MOCHA_ORG}/apiproducts/${apiProductName}"
 
-    ${CURL} -q -s -H "Content-Type:application/json" -u "$USERNAME":"$PASSWORD" ${productURL} -X DELETE -D headers.txt -o deleteAPIProduct.txt > /dev/null 2>&1 ; ret=$?
+    ${CURL} -q -s -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${productURL} -X DELETE -D headers.txt -o deleteAPIProduct.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
     [[ ${ret} -ne 0 ]] && \
          logError "Failed to delete API Product with code $result"

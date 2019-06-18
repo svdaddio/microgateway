@@ -1,9 +1,12 @@
-# Install bats 
+# Install bats for test framework
 npm install -g bats
 
+# Install yq to edit EMG yaml files
+npm install -g yq
+
 # Run PreSubmit Test
-USERNAME=<username> PASSWORD=<password> ORG_NAME=<orgName> PROXY_ENV=<env> bats PullRequestTests.bats
+MOCHA_USER=<username> MOCHA_PASSWORD=<password> MOCHA_ORG=<orgName> MOCHA_ENV=<env> bats PullRequestTests.bats
 
 # Run Nightly Test
-USERNAME=<username> PASSWORD=<password> ORG_NAME=<orgName> PROXY_ENV=<env> bats NightlyTests.bats
+MOCHA_USER=<username> MOCHA_PASSWORD=<password> MOCHA_ORG=<orgName> MOCHA_ENV=<env> bats NightlyTests.bats
 
