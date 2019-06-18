@@ -8,8 +8,8 @@ jobs:
       - 
         before_script:
           - npm install -g bats
-          - apt-get install -y jq
-          - apt-get install -y yq
+          - sudo apt-get install -y jq
+          - sudo apt-get install -y yq
         script:
           - echo $PWD
           - export PATH=$PWD/cli:$PATH 
