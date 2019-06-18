@@ -33,8 +33,11 @@ EDGEMICRO=$(which edgemicro || echo edgemicro)
 TIMESTAMP=`date "+%Y-%m-%d-%H"`
 LOGFILE="NightlyTestLog.$TIMESTAMP"
 
-echo "Username $MOCHA_USER"
-echo "Org $MOCHA_ORG"
+USER="$MOCHA_USER"
+ORG="$MOCHA_ORG"
+
+echo "Username $USER"
+echo "Org $ORG"
 
 @test "listAPIProxies" {
   run listAPIProxies
