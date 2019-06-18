@@ -1,0 +1,9 @@
+# Install bats 
+npm install -g bats
+
+# Run PreSubmit Test
+USERNAME=<username> PASSWORD=<password> ORG_NAME=<orgName> PROXY_ENV=<env> bats PullRequestTests.bats
+
+# Run Nightly Test
+USERNAME=<username> PASSWORD=<password> ORG_NAME=<orgName> PROXY_ENV=<env> bats NightlyTests.bats
+
