@@ -1,6 +1,6 @@
 language: node_js
 node_js: 
-- '8.0.0'
+- '6.14'
 jobs:
   include:
       - stage: test
@@ -13,14 +13,9 @@ jobs:
           - sudo mv yq /usr/local/bin
           - chmod +x /usr/local/bin/yq
         script:
-          - jq --version
-          - yq --version
-          - echo $PWD
           - export PATH=$PWD/cli:$PATH 
-          - echo $PATH
           - cd test-e2e
-          - echo $PWD
-          - bats NightlyTests.bats
+          - export MOCHA_USER MOCHA_PASSWORD MOCHA_ORG MOCHA_ENV; bats NightlyTests.bats
 
 notifications:
   slack:
