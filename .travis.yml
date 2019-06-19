@@ -13,6 +13,7 @@ jobs:
           - sudo mv yq /usr/local/bin
         script:
           - jq --version
+          - yq --version
           - echo $PWD
           - export PATH=$PWD/cli:$PATH 
           - echo $PATH
