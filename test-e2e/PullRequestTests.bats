@@ -85,6 +85,7 @@ setupOnce() {
 
   $EDGEMICRO init 
   status=$?
+  [ $status -eq 0 ]
 
   sleep 5
 
@@ -100,7 +101,13 @@ setupOnce() {
 
   $EDGEMICRO configure -o $MOCHA_ORG -e $MOCHA_ENV -u $MOCHA_USER -p $MOCHA_PASSWORD > edgemicro.configure.txt
   status=$?
-  
+  [ $status = 0 ]
+
+  if [ ! -f $EMG_CONFIG_FILE ];
+  then
+     false
+  fi
+
   sleep 5
 
   logInfo "Configure EMG with status $status"
@@ -115,10 +122,14 @@ setupOnce() {
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO verify -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
+  status=$?
+  [ $status = 0 ]
+
   sleep 5
 
-  message=$(cat verifyEMG.txt | grep "verification complete")
+  cat verifyEMG.txt | grep "verification complete"
   status=$?
+  [ $status = 0 ]
 
   rm -f verifyEMG.txt
 
@@ -134,11 +145,14 @@ setupOnce() {
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO start -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET -p 1 > edgemicro.logs 2>&1 &
+  status=$?
+  [ $status = 0 ]
+
   sleep 5
 
-  message=$(cat edgemicro.logs | grep "PROCESS PID")
+  cat edgemicro.logs | grep "PROCESS PID"
   status=$?
-  rm -f edgemicro.logs
+  [ $status = 0 ]
 
   logInfo "Start EMG with status $status"
 
@@ -149,6 +163,11 @@ setupOnce() {
 
   logInfo "Configure and Reload EMG"
 
+  if [ ! -f $EMG_CONFIG_FILE ];
+  then
+     false
+  fi
+
   yq w -i ${EMG_CONFIG_FILE} edgemicro.config_change_poll_interval 10
   yq w -i ${EMG_CONFIG_FILE} oauth.allowNoAuthorization false
   yq w -i ${EMG_CONFIG_FILE} edgemicro.plugins.sequence[1] quota
@@ -157,6 +176,8 @@ setupOnce() {
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO reload -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET 
   status=$?
+  [ $status = 0 ]
+
   sleep 10
 
   logInfo "Configure and reload EMG with status $status"
