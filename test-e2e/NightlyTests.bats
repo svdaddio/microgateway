@@ -15,7 +15,7 @@ load testhelper
 
 # Proxy environment configured at api.enterprise.apigee.com
 # Default is 'test' environment
-MOCHA_ENV="test"
+#MOCHA_ENV=
 
 proxyNamePrefix="edgemicro_"
 proxyTargetUrl="http://mocktarget.apigee.net/json"
@@ -32,12 +32,6 @@ EDGEMICRO=$(which edgemicro || echo edgemicro)
 
 TIMESTAMP=`date "+%Y-%m-%d-%H"`
 LOGFILE="NightlyTestLog.$TIMESTAMP"
-
-USER="$MOCHA_USER"
-ORG="$MOCHA_ORG"
-
-echo "Username $USER"
-echo "Org $ORG"
 
 @test "listAPIProxies" {
   run listAPIProxies
@@ -195,8 +189,8 @@ echo "Org $ORG"
   $EDGEMICRO --version > emgVersion.txt
   status=$?
 
-  emgVersion=$(cat version.txt | grep "current edgemicro version is" | cut -d ' ' -f5) 
-  nodejsVersion=$(cat version.txt | grep "current nodejs version is" | cut -d ' ' -f5) 
+  emgVersion=$(cat emgVersion.txt | grep "current edgemicro version is" | cut -d ' ' -f5) 
+  nodejsVersion=$(cat emgVersion.txt | grep "current nodejs version is" | cut -d ' ' -f5) 
   rm -f emgVersion.txt
 
   logInfo "EMG version is $emgVersion and Nodejs version is $nodejsVersion"
@@ -211,6 +205,8 @@ echo "Org $ORG"
 
   $EDGEMICRO init -c $EMG_CONFIG_DIR
   status=$?
+
+  sleep 5
 
   logInfo "Initialize EMG with $status"
 
@@ -229,6 +225,8 @@ echo "Org $ORG"
   $EDGEMICRO configure -o $MOCHA_ORG -e $MOCHA_ENV -u $MOCHA_USER -p $MOCHA_PASSWORD > edgemicro.configure.txt
   status=$?
 
+  sleep 5
+
   logInfo "Configure EMG with $status"
 
   [ $status = 0 ]
@@ -241,6 +239,8 @@ echo "Org $ORG"
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO verify -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
+  sleep 5
+
   message=$(cat verifyEMG.txt | grep "verification complete")
   status=$?
   rm -f verifyEMG.txt
@@ -258,6 +258,7 @@ echo "Org $ORG"
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO start -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET -p 1 > edgemicro.logs 2>&1 &
   sleep 5
+
   message=$(cat edgemicro.logs | grep "PROCESS PID")
   status=$?
   rm -f edgemicro.logs
@@ -449,7 +450,7 @@ echo "Org $ORG"
 
   logInfo "Uninstall EMG"
 
-  #npm uninstall -g edgemicro
+  npm uninstall -g edgemicro
   rm -f edgemicro.sock
   rm -f edgemicro.configure.txt
   rm -f headers.txt

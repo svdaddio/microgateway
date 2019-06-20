@@ -37,7 +37,9 @@ LOGFILE="PullRequestTestLog.$TIMESTAMP"
 
 setupOnce() {
   rm -f edgemicro.sock
+  rm -f edgemicro.logs
   rm -f edgemicro.configure.txt
+  rm -f verifyEMG.txt
   rm -rf $EMG_CONFIG_DIR
 }
 
@@ -65,8 +67,8 @@ setupOnce() {
   $EDGEMICRO --version > emgVersion.txt
   status=$?
 
-  emgVersion=$(cat emgVersion.txt | grep "current edgemicro version is" | cut -d ' ' -f5) 
-  nodejsVersion=$(cat emgVersion.txt | grep "current nodejs version is" | cut -d ' ' -f5) 
+  emgVersion=$(cat emgVersion.txt | grep 'current edgemicro version is' | cut -d ' ' -f5)
+  nodejsVersion=$(cat emgVersion.txt | grep 'current nodejs version is' | cut -d ' ' -f5)
   rm -f emgVersion.txt
 
   logInfo "EMG version is $emgVersion and Nodejs version is $nodejsVersion"
@@ -79,9 +81,9 @@ setupOnce() {
 
   logInfo "Initialize EMG"
 
-  run bash -c "mkdir -p $EMG_CONFIG_DIR"
+  mkdir -p $EMG_CONFIG_DIR
 
-  run bash -c "$EDGEMICRO init" 
+  $EDGEMICRO init 
   status=$?
 
   sleep 5
@@ -101,8 +103,6 @@ setupOnce() {
   
   sleep 5
 
-  cat edgemicro.configure.txt
-
   logInfo "Configure EMG with status $status"
 
   [ $status = 0 ]
@@ -112,14 +112,12 @@ setupOnce() {
 
   logInfo "Verifying EMG configuration"
 
-  run bash -c "cat edgemicro.configure.txt"
-
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO verify -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
   sleep 5
 
-  cat verifyEMG.txt | grep "verification complete"
+  message=$(cat verifyEMG.txt | grep "verification complete")
   status=$?
 
   rm -f verifyEMG.txt
