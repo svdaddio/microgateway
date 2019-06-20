@@ -4,7 +4,7 @@
 # Author: dkoroth@google.com
 #
 
-set -x
+#set -x
 
 load testhelper
 
@@ -79,9 +79,9 @@ setupOnce() {
 
   logInfo "Initialize EMG"
 
-  mkdir -p $EMG_CONFIG_DIR
+  run bash -c "mkdir -p $EMG_CONFIG_DIR"
 
-  $EDGEMICRO init 
+  run bash -c "$EDGEMICRO init" 
   status=$?
 
   sleep 5
@@ -112,7 +112,7 @@ setupOnce() {
 
   logInfo "Verifying EMG configuration"
 
-  cat edgemicro.configure.txt
+  run bash -c "cat edgemicro.configure.txt"
 
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
