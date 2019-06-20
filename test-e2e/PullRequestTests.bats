@@ -119,7 +119,7 @@ setupOnce() {
   $EDGEMICRO verify -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
   sleep 5
 
-  message=$(cat verifyEMG.txt | grep "verification complete")
+  cat verifyEMG.txt | grep "verification complete"
   status=$?
 
   rm -f verifyEMG.txt
