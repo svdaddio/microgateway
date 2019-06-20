@@ -4,6 +4,8 @@
 # Author: dkoroth@google.com
 #
 
+set -x
+
 load testhelper
 
 # Username and Password for the api.enterprise.apigee.com
@@ -32,9 +34,6 @@ EDGEMICRO=$(which edgemicro || echo edgemicro)
 
 TIMESTAMP=`date "+%Y-%m-%d-%H"`
 LOGFILE="PullRequestTestLog.$TIMESTAMP"
-
-echo "Username $MOCHA_USER"
-echo "Org $MOCHA_ORG"
 
 setupOnce() {
   rm -f edgemicro.sock
@@ -66,8 +65,8 @@ setupOnce() {
   $EDGEMICRO --version > emgVersion.txt
   status=$?
 
-  emgVersion=$(cat version.txt | grep "current edgemicro version is" | cut -d ' ' -f5) 
-  nodejsVersion=$(cat version.txt | grep "current nodejs version is" | cut -d ' ' -f5) 
+  emgVersion=$(cat emgVersion.txt | grep "current edgemicro version is" | cut -d ' ' -f5) 
+  nodejsVersion=$(cat emgVersion.txt | grep "current nodejs version is" | cut -d ' ' -f5) 
   rm -f emgVersion.txt
 
   logInfo "EMG version is $emgVersion and Nodejs version is $nodejsVersion"
@@ -82,6 +81,8 @@ setupOnce() {
 
   $EDGEMICRO init 
   status=$?
+
+  sleep 5
 
   if [ ! -d $EMG_CONFIG_DIR ];
   then
@@ -101,6 +102,8 @@ setupOnce() {
   $EDGEMICRO configure -o $MOCHA_ORG -e $MOCHA_ENV -u $MOCHA_USER -p $MOCHA_PASSWORD > edgemicro.configure.txt
   status=$?
 
+  sleep 5
+
   logInfo "Configure EMG with status $status"
 
   [ $status = 0 ]
@@ -113,8 +116,11 @@ setupOnce() {
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO verify -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET > verifyEMG.txt 2>&1
+  sleep 5
+
   message=$(cat verifyEMG.txt | grep "verification complete")
   status=$?
+
   rm -f verifyEMG.txt
 
   logInfo "Verify EMG configuration with status $status"
@@ -130,6 +136,7 @@ setupOnce() {
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
   $EDGEMICRO start -o $MOCHA_ORG -e $MOCHA_ENV -k $EMG_KEY -s $EMG_SECRET -p 1 > edgemicro.logs 2>&1 &
   sleep 5
+
   message=$(cat edgemicro.logs | grep "PROCESS PID")
   status=$?
   rm -f edgemicro.logs
@@ -325,7 +332,7 @@ setupOnce() {
 
   logInfo "Uninstall EMG"
 
-  #npm uninstall -g edgemicro
+  npm uninstall -g edgemicro
   rm -f edgemicro.sock
   rm -f edgemicro.configure.txt
   rm -f headers.txt
