@@ -79,15 +79,12 @@ setupOnce() {
 
   logInfo "Initialize EMG"
 
+  mkdir -p $EMG_CONFIG_DIR
+
   $EDGEMICRO init 
   status=$?
 
   sleep 5
-
-  if [ ! -d $EMG_CONFIG_DIR ];
-  then
-     false
-  fi
 
   logInfo "Initialize EMG with status $status"
 
