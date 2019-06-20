@@ -98,8 +98,10 @@ setupOnce() {
 
   $EDGEMICRO configure -o $MOCHA_ORG -e $MOCHA_ENV -u $MOCHA_USER -p $MOCHA_PASSWORD > edgemicro.configure.txt
   status=$?
-
+  
   sleep 5
+
+  cat edgemicro.configure.txt
 
   logInfo "Configure EMG with status $status"
 
@@ -109,6 +111,8 @@ setupOnce() {
 @test "verifyEMG" {
 
   logInfo "Verifying EMG configuration"
+
+  cat edgemicro.configure.txt
 
   EMG_KEY=$(cat edgemicro.configure.txt | grep "key:" | cut -d ' ' -f4)
   EMG_SECRET=$(cat edgemicro.configure.txt | grep "secret:" | cut -d ' ' -f4)
