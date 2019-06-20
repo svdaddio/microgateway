@@ -1,6 +1,6 @@
 language: node_js
 node_js: 
-- '6.14'
+- '6'
 jobs:
   include:
       - stage: test
@@ -9,13 +9,13 @@ jobs:
         before_script:
           - npm install -g bats
           - sudo apt-get install -y jq
+          - curl -q -s -L https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64 -o yq
+          - sudo mv yq /usr/local/bin
+          - chmod +x /usr/local/bin/yq
         script:
-          - echo $PWD
           - export PATH=$PWD/cli:$PATH 
-          - echo $PATH
-          - cd test-e2e 
-          - env
-          - bats NightlyTests.bats
+          - cd test-e2e
+          - MOCHA_USER=$BATS_USER MOCHA_PASSWORD=$BATS_PASSWORD MOCHA_ORG=$BATS_ORG MOCHA_ENV=$BATS_ENV bats PullRequestTests.bats
 
 notifications:
   slack:
