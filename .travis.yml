@@ -14,7 +14,7 @@ jobs:
         script:
           - export PATH=$PWD/cli:$PATH 
           - cd test-e2e
-          - MOCHA_USER=$BATS_USER MOCHA_PASSWORD=$BATS_PASSWORD MOCHA_ORG=$BATS_ORG MOCHA_ENV=$BATS_ENV sh PullRequestTests.sh
+          - MOCHA_USER=$BATS_USER MOCHA_PASSWORD=$BATS_PASSWORD MOCHA_ORG=$BATS_ORG MOCHA_ENV=$BATS_ENV sh ./PullRequestTests.sh
 
 notifications:
   slack:
