@@ -1,11 +1,11 @@
-#!/usr/bin/bash
+#!/usr/bin/sh
 
 #
 # Author: dkoroth@google.com
 #
 
-. ./testhelper.sh
-. ./testEMG.sh
+source ./testhelper.sh
+source ./testEMG.sh
 
 # Username and Password for the api.enterprise.apigee.com
 #MOCHA_USER=
