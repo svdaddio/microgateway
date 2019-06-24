@@ -7,7 +7,6 @@ jobs:
         script: npm test
       - 
         before_script:
-          - npm install -g bats
           - sudo apt-get install -y jq
           - curl -q -s -L https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64 -o yq
           - sudo mv yq /usr/local/bin
