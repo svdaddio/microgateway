@@ -4,8 +4,8 @@
 # Author: dkoroth@google.com
 #
 
-source testhelper.sh
-source testEMG.sh
+source ./testhelper.sh
+source ./testEMG.sh
 
 # Username and Password for the api.enterprise.apigee.com
 #MOCHA_USER=
