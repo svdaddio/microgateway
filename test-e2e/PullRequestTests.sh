@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #
 # Author: dkoroth@google.com
@@ -6,8 +6,8 @@
 
 set -x 
 
-source ./testhelper.sh
-source ./testEMG.sh
+. ./testhelper.sh
+. ./testEMG.sh
 
 # Username and Password for the api.enterprise.apigee.com
 #MOCHA_USER=
