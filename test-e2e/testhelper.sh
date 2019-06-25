@@ -9,12 +9,11 @@ API_PROXY_URL="https://api.enterprise.apigee.com/v1/organizations"
 
 CURL="curl -q -s"
 
-logError(){
+function logError(){
     echo -e "[ERROR]: $*" >> $LOGFILE
-    exit 1
 }
 
-logInfo(){
+function logInfo(){
     echo -e "[INFO]: $*" >> $LOGFILE
 }
 
@@ -24,7 +23,7 @@ logInfo(){
 # 
 #
 
-listDevelopers() {
+function listDevelopers() {
 
     local result=0
     local ret=0
@@ -46,7 +45,7 @@ listDevelopers() {
 
 }
 
-createDeveloper() {
+function createDeveloper() {
 
     local result=0
     local ret=0
@@ -73,7 +72,7 @@ createDeveloper() {
 
 }
 
-listDeveloper() {
+function listDeveloper() {
 
     local result=0
     local ret=0
@@ -97,7 +96,7 @@ listDeveloper() {
 
 }
 
-deleteDeveloper() {
+function deleteDeveloper() {
 
     local result=0
     local ret=0
@@ -127,7 +126,7 @@ deleteDeveloper() {
 # 
 #
 
-listDeveloperApps() {
+function listDeveloperApps() {
 
     local result=0
     local ret=0
@@ -151,7 +150,7 @@ listDeveloperApps() {
 
 }
 
-createDeveloperApp() {
+function createDeveloperApp() {
 
     local result=0
     local ret=0
@@ -180,7 +179,7 @@ createDeveloperApp() {
 }
 
 
-listDeveloperApp() {
+function listDeveloperApp() {
 
     local result=0
     local ret=0
@@ -205,7 +204,7 @@ listDeveloperApp() {
 
 }
 
-getDeveloperApiKey() {
+function getDeveloperApiKey() {
 
     local result=0
     local ret=0
@@ -232,7 +231,7 @@ getDeveloperApiKey() {
 
 }
 
-deleteDeveloperApp() {
+function deleteDeveloperApp() {
 
     local result=0
     local ret=0
@@ -263,7 +262,7 @@ deleteDeveloperApp() {
 # 
 #
 
-listAPIProxy() {
+function listAPIProxy() {
 
     local result=0
     local ret=0
@@ -288,7 +287,7 @@ listAPIProxy() {
 }
 
 
-listAPIProxies() {
+function listAPIProxies() {
 
     local result=0
     local ret=0
@@ -310,7 +309,7 @@ listAPIProxies() {
 
 }
 
-createAPIProxy() {
+function createAPIProxy() {
 
     local result=0
     local ret=0
@@ -337,7 +336,7 @@ createAPIProxy() {
 }
 
 
-listAPIProxy() {
+function listAPIProxy() {
 
     local result=0
     local ret=0
@@ -361,7 +360,7 @@ listAPIProxy() {
 
 }
 
-updateAPIProxy() {
+function updateAPIProxy() {
 
     local result=0
     local ret=0
@@ -388,7 +387,7 @@ updateAPIProxy() {
 
 }
 
-deployAPIProxy() {
+function deployAPIProxy() {
 
     local result=0
     local ret=0
@@ -415,7 +414,7 @@ deployAPIProxy() {
 
 }
 
-undeployAPIProxy() {
+function undeployAPIProxy() {
 
     local result=0
     local ret=0
@@ -442,7 +441,7 @@ undeployAPIProxy() {
 
 }
 
-deleteAPIProxy() {
+function deleteAPIProxy() {
 
     local result=0
     local ret=0
@@ -452,7 +451,7 @@ deleteAPIProxy() {
 
     ${CURL} -H "Content-Type:application/json" -u "$MOCHA_USER":"$MOCHA_PASSWORD" ${apiProxyURL} -X DELETE -D headers.txt -o deleteAPIProxy.txt > /dev/null 2>&1 ; ret=$?
     result=$(grep HTTP headers.txt | cut -d ' ' -f2)
-    if [ ${ret} -eq 0 -a ${result} -eq 201 ]; then
+    if [ ${ret} -eq 0 -a ${result} -eq 200 ]; then
          logInfo "Successfully deleted API Proxy with code $result"
     else
          logError "Failed to delete API Proxy with code $result"
@@ -466,7 +465,7 @@ deleteAPIProxy() {
 
 }
 
-createAPIProxyBundle() {
+function createAPIProxyBundle() {
 
     local result=0
     local ret=0
@@ -493,7 +492,7 @@ createAPIProxyBundle() {
          ret=1
     else
          logInfo "Successfully created API Proxy Bundle ${apiProxyName}.zip"
-         ret=1
+         ret=0
     fi
 
     return $ret
@@ -506,7 +505,7 @@ createAPIProxyBundle() {
 # 
 #
 
-listAPIProducts() {
+function listAPIProducts() {
 
     local result=0
     local ret=0
@@ -528,7 +527,7 @@ listAPIProducts() {
 
 }
 
-createAPIProduct() {
+function createAPIProduct() {
 
     local result=0
     local ret=0
@@ -556,7 +555,7 @@ createAPIProduct() {
 
 }
 
-listAPIProduct() {
+function listAPIProduct() {
 
     local result=0
     local ret=0
@@ -580,7 +579,7 @@ listAPIProduct() {
 
 }
 
-deleteAPIProduct() {
+function deleteAPIProduct() {
 
     local result=0
     local ret=0

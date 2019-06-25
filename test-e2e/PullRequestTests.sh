@@ -4,10 +4,10 @@
 # Author: dkoroth@google.com
 #
 
-set -x 
+#set -x 
 
-. ./testhelper.sh
-. ./testEMG.sh
+source ./testhelper.sh
+source ./testEMG.sh
 
 # Username and Password for the api.enterprise.apigee.com
 #MOCHA_USER=

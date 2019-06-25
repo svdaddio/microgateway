@@ -2,13 +2,16 @@
 # Author: dkoroth@google.com
 #
 
-cleanUp() {
+function cleanUp() {
+
   killall node > /dev/null 2>&1
   rm -f edgemicro.sock
   rm -f edgemicro.logs
   rm -f edgemicro.configure.txt
   rm -f verifyEMG.txt
   rm -rf $EMG_CONFIG_DIR
+  return 0
+
 }
 
 function installEMG() {
