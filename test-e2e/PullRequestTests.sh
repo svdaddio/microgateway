@@ -4,8 +4,6 @@
 # Author: dkoroth@google.com
 #
 
-set -x 
-
 source ./testhelper.sh
 source ./testEMG.sh
 
