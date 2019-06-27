@@ -216,6 +216,8 @@ configAndReloadEMG() {
        logInfo "Successfully reloaded EMG with status $result"
   fi
 
+  sleep 10
+
   return $result
 
 }
